@@ -1,0 +1,8 @@
+name: liftover_env
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - python=3.10
+  - bioconda::ucsc-liftover
+prefix: /home/cab24/miniconda3/envs/liftover_env

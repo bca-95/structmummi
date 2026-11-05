@@ -1,0 +1,11 @@
+name: gcta_env
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - gcta
+  - plink
+  - plink2
+  - ldsc
+  - parallel
+prefix: /home/cab24/miniconda3/envs/gcta_env
