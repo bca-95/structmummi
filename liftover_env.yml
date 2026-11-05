@@ -3,6 +3,47 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
-  - python=3.10
-  - bioconda::ucsc-liftover
+  - _openmp_mutex=4.5
+  - bzip2=1.0.8
+  - c-ares=1.34.6
+  - ca-certificates=2026.2.25
+  - icu=78.2
+  - keyutils=1.6.3
+  - krb5=1.22.2
+  - ld_impl_linux-64=2.45.1
+  - libcurl=8.19.0
+  - libedit=3.1.20250104
+  - libev=4.33
+  - libexpat=2.7.4
+  - libffi=3.5.2
+  - libgcc=15.2.0
+  - libgcc-ng=15.2.0
+  - libgomp=15.2.0
+  - libiconv=1.18
+  - liblzma=5.8.2
+  - libnghttp2=1.67.0
+  - libnsl=2.0.1
+  - libopenssl-static=3.6.1
+  - libpng=1.6.55
+  - libsqlite=3.52.0
+  - libssh2=1.11.1
+  - libstdcxx=15.2.0
+  - libstdcxx-ng=15.2.0
+  - libuuid=2.41.3
+  - libxcrypt=4.4.36
+  - libzlib=1.3.1
+  - mariadb-connector-c=3.4.8
+  - mysql-connector-c=6.1.11
+  - ncurses=6.5
+  - openssl=3.6.1
+  - packaging=26.0
+  - pip=26.0.1
+  - python=3.10.20
+  - readline=8.3
+  - setuptools=82.0.1
+  - tk=8.6.13
+  - tzdata=2025c
+  - ucsc-liftover=482
+  - wheel=0.46.3
+  - zstd=1.5.7
 prefix: /home/cab24/miniconda3/envs/liftover_env
