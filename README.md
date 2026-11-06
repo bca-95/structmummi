@@ -57,11 +57,16 @@ source ~/.bashrc
 ## Usage
 run_merge.sh
 | Option | Description | Default |\
-|---|---|---|
-| `--input_control` | PLINK basename of the control dataset | required |
-| `--input_case` | PLINK basename of the case dataset | required |
-| `--ref_hg_target` | Target genome build: `hg19` or `hg38` | required |
-| `--liftover` | Lift data from hg18 to the target build (`yes` only for now) | `yes` |
+|---|---|---|\
+| `--input_control` | PLINK basename of the control dataset | required |\
+| `--input_case` | PLINK basename of the case dataset | required |\
+| `--ref_hg_target` | Target genome build: `hg19` or `hg38` | required |\
+| `--liftover` | Lift data from hg18 to the target build (`yes` only for now) | default: `yes` |\
+
+Example : 
+```bash
+run_merge.sh --input_control WTCCC_control --input_case WTCCC_PS_case --ref_hg_target hg38
+```
 
 Inputs are PLINK basenames (without `.bed/.bim/.fam`).
 
