@@ -50,15 +50,13 @@ bash setup.sh
 Run this from the folder that contains `structmummi/`:
 
 ```bash
-chmod +x structmummi/preprocessing/*.sh
 echo "export PATH=\"$(pwd)/structmummi/preprocessing:\$PATH\"" >> ~/.bashrc
 source ~/.bashrc
 ```
 
 ## Usage
-
-| Option | Description | Default |
 run_merge.sh
+| Option | Description | Default |\
 |---|---|---|
 | `--input_control` | PLINK basename of the control dataset | required |
 | `--input_case` | PLINK basename of the case dataset | required |
