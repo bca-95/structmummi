@@ -12,7 +12,7 @@ REPO_DIR="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")" && pwd)"
 ZENODO_RECORD="633801"      
 BASE_URL="${BASE_URL:-https://sandbox.zenodo.org/records/${ZENODO_RECORD}/files}"
 
-FILES="external_tools.tar.gz  gcta_env.tar.gz liftover_env.tar.gz reference_1000G_hg19.tar.gz reference_1000G_hg38.tar.gz reference_hg19.tar.gz reference_14.tar.gz"
+FILES="external_tools.tar.gz  gcta_env.tar.gz liftover_env.tar.gz reference_1000G_hg19.tar.gz reference_1000G_hg38.tar.gz reference_hg19.tar.gz reference_p14.tar.gz"
 DL_DIR="${REPO_DIR}/downloads"
 
 # --- Checks
