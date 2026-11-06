@@ -1,4 +1,5 @@
-# StructMuMMI – preprocessing
+# StructMuMMI 
+StructMuMMI is a framework organized in two blocks: the preprocessing and the models training
 
 Preprocessing pipeline for WTCCC genotype data (PLINK format):
 
