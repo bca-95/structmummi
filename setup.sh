@@ -61,6 +61,12 @@ for env in gcta_env liftover_env; do
     "${target}/bin/conda-unpack"     # fixes the paths inside the environment
 done
 
+# ---5. Make some files executable
+chmod +x ${REPO_DIR}/preprocessing/*.sh
+
+chmod +x ${REPO_DIR}/external_tools/plink/{plink2,vcf_subset}
+chmod +x ${REPO_DIR}/external_tools/bcftools-1.23.1/{bcftools,configure,install-sh,version.sh}
+
 # --- 5. Clean up
 cd "$REPO_DIR"
 rm -rf "$DL_DIR"
