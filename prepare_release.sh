@@ -1,6 +1,6 @@
 #!/bin/bash
 # =====================================================================
-# FOR THE MAINTAINER ONLY (you), not for users.
+# FOR THE MAINTAINER ONLY, not for users.
 # Packs the external tools, the references and the conda environments
 # into .tar.gz files to upload to Zenodo, and writes their checksums.
 #
@@ -30,6 +30,8 @@ tar -czf "$OUT/external_tools.tar.gz" external_tools/plink external_tools/bcftoo
 echo "--- 2/4 Packing references"
 tar -czf "$OUT/reference_1000G_hg19.tar.gz" references/reference_1000G_hg19
 tar -czf "$OUT/reference_1000G_hg38.tar.gz" references/reference_1000G_hg38
+tar -czf "$OUT/reference_hg19.tar.gz" references/reference_hg19
+tar -czf "$OUT/reference_p14.tar.gz" references/reference_p14
 
 echo "--- 3/4 Packing conda environments"
 for env in gcta_env liftover_env; do

@@ -9,7 +9,7 @@ set -euo pipefail
 REPO_DIR="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")" && pwd)"
 
 # --- Where the files are stored (Zenodo record)
-ZENODO_RECORD="10.5072/zenodo.633483"      
+ZENODO_RECORD="10.5072/zenodo.633801"      
 BASE_URL="${BASE_URL:-https://zenodo.org/records/${ZENODO_RECORD}/files}"
 
 FILES="external_tools.tar.gz  gcta_env.tar.gz liftover_env.tar.gz reference_1000G_hg19.tar.gz reference_1000G_hg38.tar.gz"
@@ -40,7 +40,11 @@ md5sum -c "${REPO_DIR}/checksums.md5"
 
 # --- 3. Unpack tools and references into the repo
 echo "--- Installing external tools and references"
-for f in external_tools.tar.gz reference_1000G_hg19.tar.gz reference_1000G_hg38.tar.gz; do
+for f in external_tools.tar.gz \
+         reference_1000G_hg19.tar.gz \
+         reference_1000G_hg38.tar.gz \
+         reference_hg19.tar.gz \
+         reference_p14.tar.gz; do
     tar -xzf "$f" -C "$REPO_DIR"
 done
 

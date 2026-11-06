@@ -73,12 +73,12 @@ done
 
 if [[ "$ref_hg_target" == "hg19" ]]; then
     echo " ---- Lifting from hg18 to hg19 ----"
-    CHAIN="${SCRIPT_DIR}/structmummi/external_tools/liftover/hg18ToHg19.over.chain.gz"
-    ref_seq="/wibicomfs/STBS/carene/tuto_gpt/tuto2/reference_hg19/Homo_sapiens.GRCh37.75.dna.primary_assembly.fa.gz"
+    CHAIN="${REPO_DIR}/external_tools/liftover/hg18ToHg19.over.chain.gz"
+    ref_seq="${REPO_DIR}/references/reference_hg19/Homo_sapiens.GRCh37.75.dna.primary_assembly.fa.gz"
 elif [[ "$ref_hg_target" == "hg38" ]]; then
     echo " ---- Lifting from hg18 to hg38"
-    CHAIN="${SCRIPT_DIR}/structmummi/external_tools/liftover/hg18ToHg38.over.chain.gz"
-    ref_seq="/wibicomfs/STBS/carene/tuto_gpt/tuto2/reference_p14/Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz"
+    CHAIN="${REPO_DIR}/external_tools/liftover/hg18ToHg38.over.chain.gz"
+    ref_seq="${REPO_DIR}/references/reference_p14/Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz"
 fi
 
 
