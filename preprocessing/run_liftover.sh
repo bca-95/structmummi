@@ -94,14 +94,10 @@ liftOver snps_hg18.sorted.bed $CHAIN snps_${ref_hg_target}.bed unmapped.bed
 # allvarainst
 awk 'BEGIN{OFS="\t"} {print $4, $3}' snps_${ref_hg_target}.bed > snps_${ref_hg_target}.txt
 
-if command -v conda >/dev/null 2>&1; then
-    # Initialize conda
-    source "$(conda info --base)/etc/profile.d/conda.sh"
-    conda deactivate
-    conda activate gcta_env
-else
-    echo "ERROR: conda not found in PATH" >&2; exit 1
-fi
+set +u
+conda deactivate
+conda activate gcta_env
+set -u
 
 awk '{print $4}' snps_${ref_hg_target}.bed > lifted.snps
 plink --bfile $input_ --extract lifted.snps  --update-map snps_${ref_hg_target}.txt  --make-bed --out "${input_}_${ref_hg_target}"
@@ -140,8 +136,10 @@ $BCFTOOLS norm \
 # Index
 $BCFTOOLS index -f ${output_}.norm.bcf
 
+set +u
 conda deactivate
 conda activate gcta_env
+set -u
 
 # Convert back to vcf then to plink format
 plink2 \

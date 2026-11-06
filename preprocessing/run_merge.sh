@@ -24,9 +24,9 @@ run_liftover="${SCRIPT_DIR}/run_liftover.sh"
 run_harmonization="${SCRIPT_DIR}/harmonization_to_1000g.sh"
 plink2="${REPO_DIR}/external_tools/plink/plink2"
 
-ref_1000g=""
-ref_1000g_hg19="${REPO_DIR}/references/reference_1000G_hg19/1kG_MDS5"
-ref_1000g_hg38="${REPO_DIR}/references/reference_1000G_hg38/allchr"
+ref_1kG=""
+ref_1kG_hg19="${REPO_DIR}/references/reference_1000G_hg19/1kG_MDS5"
+ref_1kG_hg38="${REPO_DIR}/references/reference_1000G_hg38/allchr"
 
 
 # Initialize variables
@@ -83,11 +83,11 @@ while [[ $# -gt 0 ]]; do
 done
 
 if [[ "$ref_hg_target" == "hg19" ]]; then
-    ref_1000g="$ref_1000g_hg19"
+    ref_1kG="$ref_1kG_hg19"
     ref_fasta="${REPO_DIR}/references/reference_hg19/Homo_sapiens.GRCh37.75.dna.primary_assembly.fa.gz"
 
 elif [[ "$ref_hg_target" == "hg38" ]]; then
-    ref_1000g="$ref_1000g_hg38"
+    ref_1kG="$ref_1kG_hg38"
     ref_fasta="${REPO_DIR}/references/reference_p14/Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz"
 
 fi

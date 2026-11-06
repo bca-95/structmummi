@@ -1,0 +1,26 @@
+name: jupyter_env2
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - jupyter
+  - notebook
+  - python=3.12
+  - conda-forge::xgboost
+  - hyperopt
+  - matplotlib
+  - numpy
+  - pandas
+  - scikit-learn
+  - shap
+  - conda-forge::kneed
+  - conda-forge::seaborn
+  - bioconda::pysam
+  - biopython
+  - conda-forge::igraph
+  - python-igraph
+  - setuptools
+  - nvidia::cuda
+  - cupy
+  - ensembl-vep
+prefix: /home/cab24/miniconda3/envs/jupyter_env2
