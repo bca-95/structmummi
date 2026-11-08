@@ -38,7 +38,8 @@ ref_fasta=""
 # Margin to set the delimitation around european samples, based on the reference panel.
 # It is the fraction of eur range, with 15% wider than the panel.
 # A figure is generated, have a look if it works with you
-eur_margin="0.15"
+eur_marginX="0.3"
+eur_marginY="0.3"
 
 # - For parsing argument - 
 # Bash giveds to the script a list of words, where each word is considered
@@ -51,10 +52,16 @@ while [[ $# -gt 0 ]]; do
       shift 2
       ;;
 
-    --eur_margin)
-      eur_margin="$2"
+    --eur_marginX)
+      eur_marginX="$2"
       shift 2
       ;;
+
+    --eur_marginY)
+      eur_marginY="$2"
+      shift 2
+      ;;
+
 
     *)
       echo "Unknown option: $1"
@@ -132,7 +139,7 @@ conda deactivate
 conda activate jupyter_env2
 set -u
 
-python3 $script_path/plot_PCA.py --margin "$eur_margin"
+python3 $script_path/plot_PCA.py --marginX "$eur_marginX" --marginY "$eur_marginY"
 
 set +u
 conda deactivate

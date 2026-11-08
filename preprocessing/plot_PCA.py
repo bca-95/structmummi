@@ -12,13 +12,17 @@ import seaborn as sns
  
 parser = argparse.ArgumentParser(
     description="Plot PC1/PC2 and define the EUR boundaries from the 1000G reference panel")
-parser.add_argument("--margin", type=float, default=0.15,
-                    help="Margin around the EUR samples, as a fraction of the EUR range: "
-                         "0.15 = box 15%% wider on each side (default: 0.15)")
+parser.add_argument("--marginX", type=float, default=0.3,
+                    help="Margin at x-axis around the EUR samples, as a fraction of the EUR range: "
+                         "0.3 = box 30%% wider on each side (default: 0.3)")
+parser.add_argument("--marginY", type=float, default=0.3,
+                    help="Margin at y-axis around the EUR samples, as a fraction of the EUR range: "
+                         "0.30 = box 30%% wider on each side (default: 0.3)")
+
 parser.add_argument("--out_bounds", default="EUR_boundaries.txt")
 args = parser.parse_args()
 
-def eur_boundaries(df, margin):
+def eur_boundaries(df, marginX, marginY):
     """Return (xmin, xmax, ymin, ymax) of the EUR reference samples,
     extended on each side by a fraction (margin) of the EUR range."""
     eur = df[df["race"] == "EUR"]
@@ -28,8 +32,8 @@ def eur_boundaries(df, margin):
     xmin, xmax = eur["PC1"].min(), eur["PC1"].max()
     ymin, ymax = eur["PC2"].min(), eur["PC2"].max()
  
-    mx = margin * (xmax - xmin)
-    my = margin * (ymax - ymin)
+    mx = marginX * (xmax - xmin)
+    my = marginY * (ymax - ymin)
  
     return xmin - mx, xmax + mx, ymin - my, ymax + my
 
@@ -50,7 +54,7 @@ mergedata = mergedata[mergedata["race"].isin(["EUR", "ASN", "AMR", "AFR", "OWN"]
 #print(mergedata.head())
 
 # EUR boundaries
-xmin, xmax, ymin, ymax = eur_boundaries(mergedata, args.margin)
+xmin, xmax, ymin, ymax = eur_boundaries(mergedata, args.marginX, args.marginY)
  
 with open(args.out_bounds, "w") as f:
     f.write("xmin xmax ymin ymax\n")
