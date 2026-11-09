@@ -1,6 +1,44 @@
 # StructMuMMI 
 StructMuMMI is a framework organized in two blocks: the preprocessing and the models training.
 
+## Requirements
+
+- [conda](https://docs.conda.io/en/latest/miniconda.html) (Miniconda or Anaconda)
+
+## Installation
+### 1. Clone the repository
+
+```bash
+git clone git@github.com:bca-95/structmummi.git
+cd structmummi
+```
+
+### 2. Install dependency tools, references, conda environments
+
+```
+cd structmummi
+bash setup.sh
+```
+
+### 3.  Run the scripts from anywhere
+
+Run this from the folder that contains `structmummi/`:
+
+```bash
+echo "export PATH=\"$(pwd)/structmummi/preprocessing:\$PATH\"" >> ~/.bashrc
+source ~/.bashrc
+```
+
+*(optional)* Set the temporary file.
+The pipeline writes temporary files to "$TMPDIR" (default: "/tmp").
+On clusters, "/tmp" is often small: point "TMPDIR" to a larger disk, either for one run:
+(Important to clean it regularly)
+```
+Add "export TMPDIR=/path/to/largerdiskfor/tmp" to your "~/.bashrc"
+Then source, 
+source ~/.bashrc
+```
+
 ### Preprocessing
 The preprocessing steps can be executed (1) fully at once or (2) step by steps for more controllable process.\
 However, only displayed arguments are modifiable. Files names are not modifiable, meaning if preprocessing start later. \
@@ -51,43 +89,7 @@ structmummi/
 └── liftover_env.yml
 ```
 
-## Requirements
 
-- [conda](https://docs.conda.io/en/latest/miniconda.html) (Miniconda or Anaconda)
-
-## Installation
-### 1. Clone the repository
-
-```bash
-git clone git@github.com:bca-95/structmummi.git
-cd structmummi
-```
-
-### 2. Install dependency tools, references, conda environments
-
-```
-cd structmummi
-bash setup.sh
-```
-
-### 3.  Run the scripts from anywhere
-
-Run this from the folder that contains `structmummi/`:
-
-```bash
-echo "export PATH=\"$(pwd)/structmummi/preprocessing:\$PATH\"" >> ~/.bashrc
-source ~/.bashrc
-```
-
-*(optional)* Set the temporary file.
-The pipeline writes temporary files to "$TMPDIR" (default: "/tmp").
-On clusters, "/tmp" is often small: point "TMPDIR" to a larger disk, either for one run:
-(Important to clean it regularly)
-```
-Add "export TMPDIR=/path/to/largerdiskfor/tmp" to your "~/.bashrc"
-Then source, 
-source ~/.bashrc
-```
 
 ## Usage
 run_merge.sh
