@@ -3,7 +3,7 @@ StructMuMMI is a framework organized in two blocks: the preprocessing and the mo
 
 ### Preprocessing
 The preprocessing steps can be executed (1) fully at once or (2) step by steps for more controllable process.\
-However, only displayed arguments are modifiable. Files names are not modifiable, meaning if preprocessing start later. 
+However, only displayed arguments are modifiable. Files names are not modifiable, meaning if preprocessing start later. \
 The used files should have been generated previously.
 (1) pre_structmummi.sh --input_control /path/to/control --input_case /path/to/case --ref_hg_target hg38
 (2) pre_structmummi.sh --input_control /path/to/control --input_case /path/to/case --ref_hg_target hg38 --start_from 2
