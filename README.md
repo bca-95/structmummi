@@ -54,6 +54,16 @@ echo "export PATH=\"$(pwd)/structmummi/preprocessing:\$PATH\"" >> ~/.bashrc
 source ~/.bashrc
 ```
 
+*(optional)* Set the temporary file.
+The pipeline writes temporary files to "$TMPDIR" (default: "/tmp").
+On clusters, "/tmp" is often small: point "TMPDIR" to a larger disk, either for one run:
+(Important to clean it regularly)
+```
+Add "export TMPDIR=/path/to/largerdiskfor/tmp" to your "~/.bashrc"
+Then source, 
+source ~/.bashrc
+```
+
 ## Usage
 run_merge.sh
 | Option | Description | Default |\
