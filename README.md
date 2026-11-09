@@ -4,27 +4,33 @@ StructMuMMI is a framework organized in two blocks: the preprocessing and the mo
 ### Preprocessing
 The preprocessing steps can be executed (1) fully at once or (2) step by steps for more controllable process.\
 However, only displayed arguments are modifiable. Files names are not modifiable, meaning if preprocessing start later. \
-The used files should have been generated previously.
-(1) pre_structmummi.sh --input_control /path/to/control --input_case /path/to/case --ref_hg_target hg38
-(2) pre_structmummi.sh --input_control /path/to/control --input_case /path/to/case --ref_hg_target hg38 --start_from 2
+The used files should have been generated previously.\
+(1) 
+```bash
+pre_structmummi.sh --input_control /path/to/control --input_case /path/to/case --ref_hg_target hg38
+```
+(2)
+```bash
+pre_structmummi.sh --input_control /path/to/control --input_case /path/to/case --ref_hg_target hg38 --start_from 2
+```
 
-Required:
-  --input_control           PLINK basename of the control dataset (without .bed/.bim/.fam)
-  --input_case              PLINK basename of the case dataset
-  --ref_hg_target           Target genome build: hg19 or hg38
+Required:\
+  --input_control           PLINK basename of the control dataset (without .bed/.bim/.fam)\
+  --input_case              PLINK basename of the case dataset\
+  --ref_hg_target           Target genome build: hg19 or hg38\
  
-Options:
-  --perform_imputation      yes|no: run phasing + imputation (default: yes)
-  **Imputation takes days (~4 days for samples size of 4K)**
-  --eur_marginX             Margin around EUR samples on PC1, fraction of EUR range (default: 0.3)
-  --eur_marginY             Margin around EUR samples on PC2, fraction of EUR range (default: 0.3)
-  --cpu_threads_phasing     Threads per chromosome for Eagle (default: 30)
-  --cpu_threads_imputation  Threads per chromosome for Minimac4 (default: 16)
-  --hc_threshold            Hard-call threshold after imputation (default: 0.1)
-  --maf                     Minor allele frequency threshold (default:0.01)
-  --cleanup                 yes|no: delete intermediate files at the end (default: yes)
-  **<ins>cleanup</ins> delete unnecessary intermediate files, excluding phasing, imputation, images, the genotypes matrix,...**
-  --start_from              Step to start from, 1-6, to resume after a failure (default: 1)
+Options:\
+  --perform_imputation      yes|no: run phasing + imputation (default: yes)\
+  **Imputation takes days (~4 days for samples size of 4K)**\
+  --eur_marginX             Margin around EUR samples on PC1, fraction of EUR range (default: 0.3)\
+  --eur_marginY             Margin around EUR samples on PC2, fraction of EUR range (default: 0.3)\
+  --cpu_threads_phasing     Threads per chromosome for Eagle (default: 30)\
+  --cpu_threads_imputation  Threads per chromosome for Minimac4 (default: 16)\
+  --hc_threshold            Hard-call threshold after imputation (default: 0.1)\
+  --maf                     Minor allele frequency threshold (default:0.01)\
+  --cleanup                 yes|no: delete intermediate files at the end (default: yes)\
+  **<ins>cleanup</ins> delete unnecessary intermediate files, excluding phasing, imputation, images, the genotypes matrix,...**\
+  --start_from              Step to start from, 1-6, to resume after a failure (default: 1)\
 
 ### Models training
 [WILL BE UPDATED LATER]
