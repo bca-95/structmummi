@@ -89,45 +89,6 @@ structmummi/
 └── liftover_env.yml
 ```
 
-
-
-## Usage
-run_merge.sh
-| Option | Description | Default |\
-|---|---|---|\
-| `--input_control` | PLINK basename of the control dataset | required |\
-| `--input_case` | PLINK basename of the case dataset | required |\
-| `--ref_hg_target` | Target genome build: `hg19` or `hg38` | required |\
-| `--liftover` | Lift data from hg18 to the target build (`yes` only for now) | optional, default: `yes` |\
-
-simplified_run_stratification.sh
-| Option | Description | Default |\
-|---|---|---|\
-| `--eur_marginX` | European (EUR) samples are filtered by setting a delimitation at the x-axis around the reference sample 1000G.
-| optional, default : 0.3, a box is extended 30% wider around EUR samples from 1000G|\
-| `--eur_marginY` | European (EUR) samples are filtered by setting a delimitation at the y-axis around the reference sample 1000G.
-| optional, default : 0.3, a box is extended 30% wider around EUR samples from 1000G|\
-
-Example : 
-
-Merge the control and case datasets.
-```bash
-run_merge.sh --input_control WTCCC_control --input_case WTCCC_PS_case --ref_hg_target hg38
-```
-
-Perform stratification.
-```bash
-simplified_run_stratification.sh --ref_hg_target hg38 <--eur_marginX 0.3 (optional)>  <--eur_marginY 0.3 (optional)>
-```
-
-Run imputation. 
-Perform stratification.
-```bash
-run_imputation.sh --ref_hg_target hg38 <--cpu_threads_phasing 40 (optional)> <--cpu_threads_imputation 14 (optional)>
-```
-
-Inputs are PLINK basenames (without `.bed/.bim/.fam`).
-
 ## Data availability
 
 The WTCCC genotype data are under controlled access and are **not** distributed with this repository.
