@@ -1,9 +1,10 @@
 #!/bin/bash
 set -euo pipefail
 
-export TMPDIR=/scratch/SCRATCH_SAS/carene/tmp
-export TEMP=/scratch/SCRATCH_SAS/carene/tmp
-export TMP=/scratch/SCRATCH_SAS/carene/tmp
+export TMPDIR="${TMPDIR:-/tmp}"
+export TMP="$TMPDIR"
+export TEMP="$TMPDIR"
+mkdir -p "$TMPDIR"
 
 # --- Locate the repo, wherever it was cloned
 SCRIPT_DIR="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")" && pwd)" # ../structmummi/preprocessing
@@ -39,12 +40,12 @@ geneticmap=""
 ref_fasta=""
 vcf_ref_panel=""
 # Reference panel same for hg19 and hg38
-ref_panel="${REPO_DIR}/reference_1000G_hg19/integrated_call_samples_v3.20130502.ALL.panel"
+ref_panel="${REPO_DIR}/references/reference_1000G_hg19/integrated_call_samples_v3.20130502.ALL.panel"
 
 
 ref_hg_target=""
-cpu_threads_phasing=40
-cpu_threads_imputation=14
+cpu_threads_phasing="30"
+cpu_threads_imputation="16"
 
 # - For parsing argument - 
 # Bash giveds to the script a list of words, where each word is considered
@@ -126,8 +127,10 @@ for chr in {1..22}; do
           --threads 40
 done
 
+set +u
 conda deactivate
 conda activate s2_mapping
+set -u
 
 # Perform the phasing using eagle
 # For optimal phasing, in the reference panel only contain EUR population
@@ -142,6 +145,7 @@ for chr in {1..22}; do
 done
 
 process_eagle(){
+  set -euo pipefail
   chr="$1"
 
   echo "--- Phasing of chr$chr started ... "
@@ -150,7 +154,7 @@ process_eagle(){
     --vcfRef="${vcf_ref_panel}/eur_ref_chr${chr}.bcf" \
     --geneticMapFile=${geneticmap} \
     --outPrefix="plink_imp2_${chr}" \
-    --numThreads=$cpu_threads_phasing \
+    --numThreads="${cpu_threads_phasing}" \
     --chrom=${chr}
  
     $BCFTOOLS index -f plink_imp2_${chr}.vcf.gz    
@@ -163,6 +167,7 @@ process_eagle(){
 
 # ---- Run imputation itself
 process_minimac() {
+    set -euo pipefail
     chr="$1"
 
     echo "--- chr $chr started..."
@@ -171,9 +176,9 @@ process_minimac() {
         "${vcf_ref_panel}/eur_ref_chr${chr}.msav" "plink_imp2_${chr}.vcf.gz" \
         -o "plink_imp3_${chr}.vcf.gz" \
         --format GT,DS,HDS,GP,SD \
-        --cpu $cpu_threads_imputation
+        --cpu "${cpu_threads_imputation}"
 
-    $BCFTOOLS index -f "plink_imp4_${chr}.vcf.gz"
+    $BCFTOOLS index -f "plink_imp3_${chr}.vcf.gz"
 
     echo "--- chr $chr done..."
 }
@@ -185,10 +190,13 @@ export geneticmap
 export run_minimac
 export vcf_ref_panel
 export BCFTOOLS
+export cpu_threads_phasing
+export cpu_threads_imputation
+
 
 # run 3 chromosomes in parallel
-parallel -j 4 process_eagle ::: {1..22}
-parallel -j 4 process_minimac ::: {1..22}
+parallel --halt now,fail=1 -j 4 process_eagle ::: {1..22}
+parallel --halt now,fail=1 -j 4 process_minimac ::: {1..22}
 
 # - Parameter estimation
 

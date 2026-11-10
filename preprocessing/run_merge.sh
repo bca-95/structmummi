@@ -1,7 +1,10 @@
 #!/bin/bash
 set -euo pipefail
 
-export TMPDIR=/scratch/SCRATCH_SAS/carene/tmp
+export TMPDIR="${TMPDIR:-/tmp}"
+export TMP="$TMPDIR"
+export TEMP="$TMPDIR"
+mkdir -p "$TMPDIR"
 
 # --- Locate the repo, wherever it was cloned
 SCRIPT_DIR="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")" && pwd)" # ../structmummi/preprocessing

@@ -5,7 +5,10 @@
 ##############################################################
 # Run stratification on the whole variants, not only on the exons
 ################################################################
-export TMPDIR=/wibicomfs/STBS/carene/tmp
+export TMPDIR="${TMPDIR:-/tmp}"
+export TMP="$TMPDIR"
+export TEMP="$TMPDIR"
+mkdir -p "$TMPDIR"
 
 # --- Locate the repo, wherever it was cloned
 SCRIPT_DIR="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")" && pwd)" # ../structmummi/preprocessing

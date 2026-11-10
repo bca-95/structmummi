@@ -1,0 +1,16 @@
+name: s2_mapping
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - bcftools
+  - bedtools
+  - bwa
+  - samtools
+  - parallel
+  - singularity
+  - gatk4
+  - picard
+  - freebayes
+  - pandas
+prefix: /home/cab24/miniconda3/envs/s2_mapping
