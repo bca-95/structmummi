@@ -45,7 +45,7 @@ However, only displayed arguments are modifiable. Files names are not modifiable
 The used files should have been generated previously.\
 (1) 
 ```bash
-pre_structmummi.sh --input_control /path/to/control --input_case /path/to/case --ref_hg_target hg38
+pre_structmummi.sh --input_control /path/to/control --input_case /path/to/case --ref_hg_target hg38 <--perform_imputation no (default:yes)>
 ```
 (2)
 ```bash
@@ -59,7 +59,8 @@ Required:\
  
 Options:\
   --perform_imputation      yes|no: run phasing + imputation (default: yes)\
-  **Imputation takes days (~4 days for samples size of 4K)**\
+  **It is recommended to perform imputation in presence of non-genotype variants.
+  Warning: Imputation takes days (~4 days for samples size of 4K)**\
   --eur_marginX             Margin around EUR samples on PC1, fraction of EUR range (default: 0.3)\
   --eur_marginY             Margin around EUR samples on PC2, fraction of EUR range (default: 0.3)\
   --cpu_threads_phasing     Threads per chromosome for Eagle (default: 30)\
