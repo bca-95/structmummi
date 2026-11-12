@@ -41,8 +41,7 @@ source ~/.bashrc
 
 ### Preprocessing
 The preprocessing steps can be executed (1) fully at once or (2) step by steps for more controllable process.\
-However, only displayed arguments are modifiable. Files names are not modifiable, meaning if preprocessing start later. \
-The used files should have been generated previously.\
+If executed step by step, files created by previous steps has to be already created as only the options below are modifiable, not files name.\
 (1) 
 ```bash
 pre_structmummi.sh --input_control /path/to/control --input_case /path/to/case --ref_hg_target hg38 <--perform_imputation no (default:yes)>
