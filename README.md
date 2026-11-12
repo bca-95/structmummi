@@ -25,7 +25,9 @@ bash setup.sh
 Run this from the folder that contains `structmummi/`:
 
 ```bash
+echo "export PATH=\"$(pwd)/structmummi:\$PATH\"" >> ~/.bashrc
 echo "export PATH=\"$(pwd)/structmummi/preprocessing:\$PATH\"" >> ~/.bashrc
+echo "export PATH=\"$(pwd)/structmummi/training:\$PATH\"" >> ~/.bashrc
 source ~/.bashrc
 ```
 
