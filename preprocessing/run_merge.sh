@@ -122,7 +122,8 @@ for dataset in "control" "case"; do
     plink2 --bfile plink_${dataset} --check-sex max-female-xf=0.2 min-male-xf=0.8 --out  plink_${dataset} 
     
     # 1) Delete individuals with sex discrepancy.
-    grep "PROBLEM" plink_${dataset}.sexcheck| awk '{print$1,$2}'> sex_${dataset}_discrepancy.txt
+    { grep "PROBLEM" plink_${dataset}.sexcheck || true; } | awk '{print$1,$2}' > sex_${dataset}_discrepancy.txt
+    #grep "PROBLEM" plink_${dataset}.sexcheck| awk '{print$1,$2}'> sex_${dataset}_discrepancy.txt
     
     # This command generates a list of individuals with the status <93>PROBLEM<94>.
     plink2 --bfile "plink_${dataset}" --remove "sex_${dataset}_discrepancy.txt" --make-bed --out "plink_${dataset}_2"

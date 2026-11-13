@@ -34,7 +34,8 @@ set -u
 export BCFTOOLS="${REPO_DIR}/external_tools/bcftools-1.23.1/bcftools"
 export BCFTOOLS_PLUGINS="${REPO_DIR}/external_tools/bcftools-1.23.1/plugins"
 
-ref_fasta="${REPO_DIR}/references/reference_p14/Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz"
+
+ref_fasta=""
 script_path="${SCRIPT_DIR}"
 
 # Initialize variable
@@ -46,6 +47,12 @@ hc_threshold=0.1
 while [[ $# -gt 0 ]]; do
   key="$1"
   case $key in
+
+    --ref_hg_target)
+      ref_hg_target="$2"
+      shift 2 
+      ;;
+
     --hc_threshold)
       hc_threshold="$2"
       shift 2
@@ -58,21 +65,30 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
+if [[ "$ref_hg_target" == "hg19" ]]; then
+    echo " ---- Imputation using reference panel built on hg19 ----"
+    ref_fasta="${REPO_DIR}/references/reference_hg19/Homo_sapiens.GRCh37.75.dna.primary_assembly.fa.gz"
+elif [[ "$ref_hg_target" == "hg38" ]]; then
+    echo " ---- Imputation using reference panl built on hg38"
+    ref_fasta="${REPO_DIR}/references/reference_p14/Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz"
+fi
 
 
-## I stored all variants (input+reference panel)
-## I need to only focus on input variants
-## MODIFY THE SCRIPT LATER
-cut -f2 plink_13.bim > original.snps
 
-seq 1 22 | parallel -j 5 '
-    $BCFTOOLS view \
-        -i "ID=@original.snps" \
-        -Oz -o "plink_imp4_{}.vcf.gz" "plink_imp3_{}.vcf.gz"
-'
-
+### I stored all variants (input+reference panel)
+### I need to only focus on input variants
+### MODIFY THE SCRIPT LATER
+#cut -f2 plink_13.bim > original.snps
+#
+#seq 1 22 | parallel -j 6 '
+#    $BCFTOOLS view \
+#        --threads 4 \
+#        -i "ID=@original.snps" \
+#        -Oz -o "plink_imp4_{}.vcf.gz" "plink_imp3_{}.vcf.gz"
+#'
+#
 # Analyze the R2 score of the imputed variants
-rm r2_maf_imputed.txt
+rm -f r2_maf_imputed.txt
 
 # header
 echo -e "STATUS\tR2\tMAF" > r2_maf_imputed.txt
@@ -109,11 +125,11 @@ set -u
 # The Rsq metric efficiently discriminates well-imputed variants at a threshold of 0.7 (statement in the tutorial)
 
 echo "--- filter out bad imputed variant, with R2 < 0.7"
-for chr in {1..22}; do
-    $BCFTOOLS filter -i 'INFO/R2>=0.7' "plink_imp4_${chr}.vcf.gz" -Oz -o "plink_imp5_${chr}.vcf.gz"
-    $BCFTOOLS index -f "plink_imp5_${chr}.vcf.gz"
-    echo "--- chr $chr done..."
-done
+seq 1 22 | parallel -j 6 '
+    $BCFTOOLS filter -i "INFO/R2>=0.7" "plink_imp4_{}.vcf.gz" -Oz -o "plink_imp5_{}.vcf.gz"
+    $BCFTOOLS index -f "plink_imp5_{}.vcf.gz"
+'
+#    echo "--- chr $chr done..."
 
 #### convert to plink using best-guess genotypes (0/1/2) 
 #### But it is suggested to use "dosage" but it is continous value
@@ -145,7 +161,7 @@ done
 
 # Merge all the chromosome into one file
 # The .fam ID has been modified from going to .vcf to plink --> rest
-rm merge_imputed_chr.txt
+rm -f merge_imputed_chr.txt
 
 for chr in {2..22}; do
   echo "plink_imp5_${chr}.dosage" >> merge_imputed_chr.txt

@@ -24,20 +24,41 @@ current_dir=$(pwd)
 output_dir=""
 perform_imputation="yes"
 
-if [[ $perform_imputation="yes"]]; then
+# - For parsing argument - 
+# Bash giveds to the script a list of words, where each word is considered
+# as argument --> for instance : -i (arg 1) input.txt (arg 2) -o ...
+while [[ $# -gt 0 ]]; do
+  key="$1"
+  case $key in
+
+    --perform_imputation)
+      perform_imputation="$2"
+      shift 2
+      ;;
+
+    *)
+      echo "Unknown option: $1"
+      echo "Usage: /pathtoscript/create_output_eur_imputed.sh --perform_imputation <yes or no, default: yes>"
+      exit 1
+      ;;
+  esac
+done
+
+
+
+if [[ "$perform_imputation" == "yes" ]]; then
     output_dir="qc_imputed/outputs_eur_imputed"
     mkdir -p $output_dir
     cd $output_dir
-elif [[ $perform_imputation="no" ]]; then 
+elif [[ "$perform_imputation" == "no" ]]; then 
     output_dir="output_eur"
     mkdir -p $output_dir
     cd $output_dir
 fi
 
-
 #cp ../../outputs_european/plink_12* .
 #cp ../plink_12* .
-cp "${current_dir}/plink_12*" .
+cp "${current_dir}/qc_imputed/"plink_12.* .
 
 ## Generate matrix
 plink2 --bfile plink_12 --recode A --out merge_recodeA
