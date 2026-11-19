@@ -98,7 +98,7 @@ Options:\
 |'--interation_evals'    |'number'  |'200'  | Number of interation during tuning\
 
 
-**An extensive option are describe and available by executing**
+**An extensive options are described and available by executing**
 
 ```bash
 train_structmummi.sh --help <or -h>>
