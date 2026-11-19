@@ -53,8 +53,11 @@ pre_structmummi.sh --input_control /path/to/control --input_case /path/to/case -
 pre_structmummi.sh --input_control /path/to/control --input_case /path/to/case --ref_hg_target hg38 --start_from 2
 ```
 
+| Option | Values | Default | Description |
+|---|---|---|---|
+
 Required:\
-  --input_control           PLINK basename of the control dataset (without .bed/.bim/.fam)\
+  |'--input_control'|'name'|'required'|  PLINK basename of the control dataset (without .bed/.bim/.fam)\
   --input_case              PLINK basename of the case dataset\
   --ref_hg_target           Target genome build: hg19 or hg38\
  
