@@ -47,6 +47,8 @@ ref_hg_target=""
 cpu_threads_phasing="30"
 cpu_threads_imputation="16"
 
+hc_threshold=0.1
+
 # - For parsing argument - 
 # Bash giveds to the script a list of words, where each word is considered
 # as argument --> for instance : -i (arg 1) input.txt (arg 2) -o ...
@@ -76,6 +78,11 @@ while [[ $# -gt 0 ]]; do
 
     --cpu_threads_imputation)
       cpu_threads_imputation="$2"
+      shift 2
+      ;;
+
+    --hc_threshold)
+      hc_threshold="$2"
       shift 2
       ;;
 
@@ -198,7 +205,10 @@ export cpu_threads_imputation
 parallel --halt now,fail=1 -j 4 process_eagle ::: {1..22}
 parallel --halt now,fail=1 -j 4 process_minimac ::: {1..22}
 
-# - Parameter estimation
+
+# ----------------------------
+# Some datasets cleansing are performed after the imputation
+"${SCRIPT_DIR}/run_after_imputation.sh"  --ref_hg_target "$ref_hg_target" --hc_threshold "$hc_threshold"
 
 
 

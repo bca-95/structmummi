@@ -37,9 +37,8 @@ PYTHON_BIN="python3"
 # config template
 # --------------------------------------------------------
 GENOTYPE_PATH="qc_imputed/outputs_eur_imputed/merge_recodeA.raw"
-OUTDIR="ML_johnsen"
+OUTDIR="training_analysis/ML_johnsen"
 N_REPEATS=10
-FIRST_REPEAT=1
 
 #BASE_PARAM_OUT="/wibicomfs/STBS/carene/sanger/processed_data/merged_control_case/wtccc2_psoriasis/MAF_01/qc_imputed/outputs_eur_imputed/ML/model_johnsen/version3.0/"
 
@@ -52,7 +51,7 @@ MIN_K=1200
 N_JOBS=46
 DEVICE="cuda:0"
 ITERATION_EVALS=200
-NAME_IMAGE="Disease"
+DISEASE_NAME="DiseaseX"
 LOG_FILE="outlog_johnsen.txt"
 
 # Define the seed to split the rank and build sets, assigned for each repeats
@@ -63,23 +62,24 @@ SEED_MODE="default"
 SEED_MIN=12
 SEED_MAX=999
 USER_SEEDS=""
-CONTINUE="no"
+CONTINUE="yes"
 
 usage() {
 cat <<EOF
-Usage: run_training.sh [options]
+Usage: execute_johnsen.sh [options]
  
 Input / output:
-  --genotype PATH         Genotype matrix from plink --recode A (.raw)
+  --genotype_path PATH         Genotype matrix from plink --recode A (.raw)
                           (default: $GENOTYPE_PATH)
   --outdir DIR            Output folder (default: ./$OUTDIR)
-  --name_image NAME             Label used in plot/file names (default: $NAME_IMAGE)
+  --disease_name NAME             Label used in plot/file names (default: $DISEASE_NAME)
  
 Repeats:
   --n_repeats N           Number of repeats. This creates directory repeat_1 ... repeat_N. (default: $N_REPEATS)
-  --continue              Keep the repeats already done in --outdir and add N new ones
-                          after the last finished repeat (e.g. repeat_11 ... repeat_15)
-                          Without it, repeats start at repeat_1 and old results are overwritten 
+  --continue              default: yes. 
+                          If "yes", a new training is performed using differents seeds.
+                          For e.g, if the last training was stored in the directory repeat_10, it performs new training after the last finished repeat (e.g. repeat_11 ... repeat_15)
+                          If "no", repeats start at repeat_1 and old results are overwritten 
 
 Seeds (split of the samples into rank/build sets assigned for each repeat):
   --seed_mode MODE        default   : fixed list (${RD_STATE_BUILDS[*]}) for repeats 1-10,
@@ -87,7 +87,7 @@ Seeds (split of the samples into rank/build sets assigned for each repeat):
                           random    : random seeds between $SEED_MIN and $SEED_MAX
                           user_seed : your own seeds, given with --seeds
                           (default: $SEED_MODE)
-  --seeds "S1,S2,..."     With --seed_mode user_seed: one seed per repeat, in order
+  --seeds "S1,S2,..."     With --seed_mode user_seed give a list of seeds. One seed per repeat, 
   The seeds used are written to <outdir>/seeds_used.tsv
  
  
@@ -111,8 +111,7 @@ while [[ $# -gt 0 ]]; do
     --outdir)                 OUTDIR="${2:-}";           shift 2 ;;
     --name_image)             NAME_IMAGE="${2:-}";       shift 2 ;;
     --n_repeats)         N_REPEATS="${2:-}";        shift 2 ;;
-    --first_repeat)      FIRST_REPEAT="${2:-}";     shift 2 ;;
-    --continue)          CONTINUE="yes";            shift 1 ;;
+    --continue)          CONTINUE="${2:-}";            shift 2 ;;
     --seed_mode)         SEED_MODE="${2:-}";        shift 2 ;;
     --seeds)             USER_SEEDS="${2:-}";       shift 2 ;;
     --device)            DEVICE="${2:-}";           shift 2 ;;
@@ -120,6 +119,8 @@ while [[ $# -gt 0 ]]; do
     --iteration_evals)   ITERATION_EVALS="${2:-}";  shift 2 ;;
     --test_size)         TEST_SIZE="${2:-}";        shift 2 ;;
     --train_build_size)  TRAIN_BUILD_SIZE="${2:-}"; shift 2 ;;
+    --nsplits_shap_rank) NSPLITS_SHAP_RANK="${2:-}"; shift 2 ;;
+    --rd_state_test)     RD_STATE_TEST="${2:-}";    shift 2 ;;
     --min_k)             MIN_K="${2:-}";       shift 2 ;;
     --max_k)             MAX_K="${2:-}";       shift 2 ;;
     -h|--help)           usage; exit 0 ;;
@@ -157,7 +158,7 @@ START_REPEAT=1
 if [[ "$CONTINUE" == "yes" ]]; then
     last_done=0
     for d in "$OUTDIR"/repeat_*; do
-        [[ -f "$d/model_final_johnsen.json" ]] || continue
+        [[ -f "$d/model_final.json" ]] || continue
         num="${d##*repeat_}"                      # ".../repeat_7" -> "7"
         if [[ "$num" =~ ^[0-9]+$ ]] && (( num > last_done )); then
             last_done=$num
@@ -243,7 +244,6 @@ esac
 # -------------------------------------------------------
 echo "Genotype matrix : $GENOTYPE_PATH"
 echo "Output folder   : $OUTDIR"
-echo "Repeats         : $FIRST_REPEAT to $(( FIRST_REPEAT + N_REPEATS - 1 ))"
 echo "Device          : $DEVICE"
 echo "Seed mode       : $SEED_MODE"
 echo "Seeds           : ${SEEDS_RUN[*]}"
@@ -255,7 +255,8 @@ echo "Seeds           : ${SEEDS_RUN[*]}"
 for (( r = START_REPEAT; r <= END_REPEAT; r++ )); do
 #for (( r = 1; r <= N_REPEATS; r++ )); do
     repeat_id="repeat_${r}"
-    rd_state_build="${SEEDS_RUN[$((r - 1))]}"
+    rd_state_build="${SEEDS_RUN[$((r - START_REPEAT))]}"
+
 
     outdir="${OUTDIR}/${repeat_id}"
     mkdir -p "$outdir"
@@ -274,12 +275,16 @@ for (( r = START_REPEAT; r <= END_REPEAT; r++ )); do
 "n_jobs": ${N_JOBS},
 "device": "${DEVICE}",
 "iteration_evals": ${ITERATION_EVALS},
-"name_image": "${NAME_IMAGE}",
+"disease_name": "${DISEASE_NAME}",
 "log_file": "${LOG_FILE}",
 "max_k": ${MAX_K},
 "min_k": ${MIN_K}
 }
 EOF
+
+    # record the seed before running, so it is kept even if the run crashes
+    printf "%s\t%s\t%s\t%s\t%s\n" "$repeat_id" "$rd_state_build" "$SEED_MODE" "$RD_STATE_TEST" \
+        "$(date '+%Y-%m-%d %H:%M:%S')" >> "$SEED_LOG"
 
     echo "============================================================"
     echo " Running repead_id : ${repeat_id} --  with seed (rd_state_build=${rd_state_build})"

@@ -37,7 +37,7 @@ echo "--- 3/4 Packing conda environments"
 for env in gcta_env liftover_env; do
     conda-pack -n "$env" -o "$OUT/${env}.tar.gz" --ignore-missing-files --force
     # Also keep a readable list of the exact versions in the repo
-    conda env export -n "$env" --no-builds > "${REPO_DIR}/${env}.yml"
+    conda env export -n "$env" --no-builds > "${REPO_DIR}/conda_env/${env}.yml"
 done
 
 echo "--- 4/4 Writing checksums"

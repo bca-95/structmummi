@@ -39,7 +39,7 @@ ref_fasta=""
 script_path="${SCRIPT_DIR}"
 
 # Initialize variable
-hc_threshold=0.1
+hc_threshold=""
 
 # - For parsing argument - 
 # Bash giveds to the script a list of words, where each word is considered
@@ -75,18 +75,18 @@ fi
 
 
 
-### I stored all variants (input+reference panel)
-### I need to only focus on input variants
-### MODIFY THE SCRIPT LATER
-#cut -f2 plink_13.bim > original.snps
-#
-#seq 1 22 | parallel -j 6 '
-#    $BCFTOOLS view \
-#        --threads 4 \
-#        -i "ID=@original.snps" \
-#        -Oz -o "plink_imp4_{}.vcf.gz" "plink_imp3_{}.vcf.gz"
-#'
-#
+## I stored all variants (input+reference panel)
+## I need to only focus on input variants
+## MODIFY THE SCRIPT LATER
+cut -f2 plink_13.bim > original.snps
+
+seq 1 22 | parallel -j 6 '
+    $BCFTOOLS view \
+        --threads 4 \
+        -i "ID=@original.snps" \
+        -Oz -o "plink_imp4_{}.vcf.gz" "plink_imp3_{}.vcf.gz"
+'
+
 # Analyze the R2 score of the imputed variants
 rm -f r2_maf_imputed.txt
 
@@ -180,6 +180,7 @@ plink2 --pfile "plink_imp5_all" --fa $ref_fasta  --make-bed --out "plink_imp6_al
 cp plink_13.fam plink_imp6_all.fam
 
 plink2 --bfile "plink_imp6_all" --fa $ref_fasta --make-bed --out "plink_imp7_all"
+
 
 # This data contains variants located in the exons + intron
 # only select the exons variants

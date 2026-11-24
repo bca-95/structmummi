@@ -6,7 +6,7 @@ dependencies:
   - jupyter
   - notebook
   - python=3.12
-  - conda-forge::xgboost
+  - xgboost
   - hyperopt
   - matplotlib
   - numpy

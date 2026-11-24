@@ -61,6 +61,12 @@ Options:
   --maf                     Minor allele frequency threshold (default: $maf)
   --cleanup                 yes|no: delete intermediate files at the end (default: $cleanup)
   --start_from              Step to start from, 1-5, to resume after a failure (default: 1)
+  |1: Take the inputs and harmonize the datasets to 1000G reference panel 
+  |2: perform stratification and extract EUR samples
+  |3: perform imputation 
+  |4: perform quality control
+  |5: Prepare the genotype matrix and delete the intermediate files
+
 EOF
 }
 
@@ -208,7 +214,7 @@ run_step 2 simplified_run_stratification.sh \
     --eur_marginX $eur_marginX \
     --eur_marginY $eur_marginY
 
-# step 3 and 4: This script perform imputation
+# step 3: This script perform imputation
 # Then, a simple quality control is performed on the imputed variants
 # This steps take a lot of time
 if [[ "$perform_imputation" == "yes" ]]; then
@@ -216,24 +222,20 @@ if [[ "$perform_imputation" == "yes" ]]; then
             --ref_hg_target "$ref_hg_target" \
             --cpu_threads_phasing "$cpu_threads_phasing" \
             --cpu_threads_imputation "$cpu_threads_imputation"
-    
-    run_step 4 run_after_imputation.sh \
-            --ref_hg_target "$ref_hg_target" \
-            --hc_threshold "$hc_threshold"
 else
     echo "NO imputation is performed"
 fi
 
-# step 5 : Perform quality control
-run_step 5 qc_filtering_snpid_imputed.sh \
+# step 4 : Perform quality control
+run_step 4 qc_filtering_snpid_imputed.sh \
     --ref_hg_target "$ref_hg_target" \
     --maf "$maf" \
     --perform_imputation "$perform_imputation"
  
-# step 6: Delete intermediate files
+# step 5: Delete intermediate files
 # If imputation performed the phasing and imputation file is not deleted
 # and can be reused. They take a large amount of time to generated.
-run_step 6 create_output_eur_imputed.sh \
+run_step 5 create_output_eur_imputed.sh \
     --perform_imputation "$perform_imputation" \
     --cleanup "$cleanup"
 

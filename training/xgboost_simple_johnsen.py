@@ -61,7 +61,7 @@ device    = config.get("device", "cuda:0")
 set_max_bin = config.get("set_max_bin", "no")
 iteration_evals = config["iteration_evals"]
 log_file  = config.get("log_file", "ouput_log")
-name_image=config.get("name_image", "xgb_image")
+disease_name=config.get("disease_name", "diseaseX")
 repeat_id = config["repeat_id"]
 max_k = config.get("max_k", 4500)
 min_k = config.get("min_k", 1200)
@@ -495,9 +495,10 @@ def func_training_with_bestHP(X_, Y_, best_params, feature_ranking):
 
     best_params = best_params.copy() 
 
-    best_K_frac = best_params["K_frac"]
+    #best_K_frac = best_params["K_frac"]
+    #K_count = max(1, int(X_.shape[1] * best_K_frac))
 
-    K_count = max(1, int(X_.shape[1] * best_K_frac))
+    K_count = max(1, min(int(best_params["K_frac"]), X_.shape[1]))
 
     # Select top features
     # This contain the names, fetch the index
@@ -672,7 +673,7 @@ feature_ranking = pd.DataFrame({ 'feature': X_rank_df.columns,
                                 }).sort_values(by='relative_contribution', ascending=False)
 
 # Write the contribution of each feature in a file, before features selection
-pd.DataFrame(feature_ranking).to_csv(f"{param_out}/{repeat_id}/johnsen_feature_rank_{nsplits_shap_rank}_{name_image}.tsv",
+pd.DataFrame(feature_ranking).to_csv(f"{param_out}/{repeat_id}/johnsen_feature_rank_{nsplits_shap_rank}_{disease_name}.tsv",
                                      sep='\t', header=True, index=False  )
 
 # --------------------------------
@@ -691,7 +692,7 @@ plt.xticks(fontsize=14)
 plt.yticks(fontsize=14)
 plt.grid(True)
 
-plot_path = f"{param_out}/{repeat_id}/johnsen_mcc_curve_rank_{str(nsplits_shap_rank)}_{name_image}.png"
+plot_path = f"{param_out}/{repeat_id}/johnsen_mcc_curve_rank_{str(nsplits_shap_rank)}_{disease_name}.png"
 plt.savefig(plot_path, dpi=150, bbox_inches="tight")
 plt.close()
 # --------------------------------
@@ -719,10 +720,7 @@ minutes_build = (elapsed % 3600) / 60
 # --------------------------------
 # --- Store the parameters
 func_write_parameter(mcc_storage_build, param_out, repeat_id,
-                             filename = f"johnsen_tuning_build_{str(nsplits_shap_rank)}")
-
-func_write_parameter(best_params_build, param_out, repeat_id,
-                             filename = f"johnsen_bestparams_build_{str(nsplits_shap_rank)}")
+                             filename = f"tuning_all_params_build")
 
 
 # --------------------------------
@@ -730,11 +728,11 @@ func_write_parameter(best_params_build, param_out, repeat_id,
 model_final, top_features_idx = func_training_with_bestHP(X_build, Y_build, best_params_build, feature_ranking)
 
 # --- Save the model
-model_final.save_model(f"{param_out}/{repeat_id}/model_final_johnsen.json")
+model_final.save_model(f"{param_out}/{repeat_id}/model_final.json")
 
 # --- save the top features
 top_ML_feature = feature_ranking['feature'].values[:len(top_features_idx)]
-np.save(f"{param_out}/{repeat_id}/top_ML_feature_johnsen.npy", top_ML_feature)
+np.save(f"{param_out}/{repeat_id}/top_ML_feature.npy", top_ML_feature)
 
 # --- Select the best mcc threshold and save it
 # select it, using the ranking set
@@ -768,7 +766,7 @@ best_params_build["threshold_mcc"] = threshold_mcc
 # --------------------------------
 # --- Store the BEST parameters
 func_write_parameter(best_params_build, param_out, repeat_id,
-                             filename = f"johnsen_bestparams_build_{str(nsplits_shap_rank)}")
+                             filename = f"model_bestparams_build")
 
 # --------------------------------
 
@@ -808,7 +806,7 @@ plt.xticks(fontsize=14)
 plt.yticks(fontsize=14)
 plt.grid(True)
 
-plot_path = f"{param_out}/{repeat_id}/johnsen_mcc_curve_build_{str(nsplits_shap_rank)}_{name_image}.png"
+plot_path = f"{param_out}/{repeat_id}/johnsen_mcc_curve_build_{str(nsplits_shap_rank)}_{disease_name}.png"
 plt.savefig(plot_path, dpi=150, bbox_inches="tight")
 plt.close()
 # --------------------------------
