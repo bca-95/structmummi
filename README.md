@@ -93,11 +93,13 @@ Giving a case-control genotype matrix, an ensemble of models is trained, SNPs co
 For more controllable process, this training block can be performed as a whole or step by step, using the function ```bash --start_from```.
 
 ```bash
-train_structmummi.sh <--start_from 1 (default: 1)>
+train_structmummi.sh --model johnsen|medvedev (required) <--start_from 1 (default: 1)>
 ```
 
 | Option | Values | Default | Description |
-Options:\
+Required:\
+| '--model'                | johnsen or medvedev | - | Training based on Johnsen [REF] or Medvedev [REF] model \ 
+Optional:\
 |'--start_from'            |'number'  |'1'   | It executes steps from the indicated number to the end. Step to start from, 1-2 \
 | 1: Perform an ensemble of "default: 10" models \
 | 2: Do the SNPs prioritization\
