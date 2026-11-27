@@ -99,7 +99,7 @@ train_structmummi.sh --model johnsen|medvedev (required) <--start_from 1 (defaul
 
 | Option | Values | Default | Description |
 Required:\
-| '--model'                | johnsen or medvedev | - | Training based on Johnsen [REF] or Medvedev [REF] model \ 
+| '--model'                | johnsen or medvedev or colrow | - | Training based on Johnsen [REF] or Medvedev [REF] model \ 
 Optional:\
 |'--start_from'            |'number'  |'1'   | It executes steps from the indicated number to the end. Step to start from, 1-2 \
 | 1: Perform an ensemble of "default: 10" models \
