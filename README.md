@@ -6,6 +6,7 @@ StructMuMMI is a framework organized in two blocks: the preprocessing and the mo
 - [conda](https://docs.conda.io/en/latest/miniconda.html) (Miniconda or Anaconda)
 
 ## Installation
+Its installation requires about 400GB
 ### 1. Clone the repository
 
 ```bash
